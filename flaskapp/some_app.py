@@ -15,6 +15,7 @@ from flask_bootstrap import Bootstrap
 from werkzeug.utils import secure_filename
 from flask import request
 from flask import Response
+import lxml.etree as ET
 
 
 print("Hello world")
@@ -97,6 +98,16 @@ def apinet():
                     mimetype="application/json")
 
     return resp
+
+
+@app.route("/apixml", methods=['GET', 'POST'])
+def apixml():
+    dom = ET.parse("./static/xml/file.xml")
+    xslt = ET.parse("./static/xml/file.xslt")
+    transform = ET.XSLT(xslt)
+    newhtml = transform(dom)
+    strfile = ET.tostring(newhtml)
+    return strfile
 
 
 if __name__ == "__main__":
